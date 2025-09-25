@@ -4,10 +4,12 @@ title: Terraform Test and Check
 export:
   format: pdf
 
-colorSchema: 'light'
+# colorSchema: 'light'
 ---
 
 image
+---
+zoom: 1.3
 ---
 
 # Why some companies do not test IaC 
@@ -59,58 +61,13 @@ zoom: 1.2
 
 ---
 zoom: 1.3
+src: ./pages/tf-s3-code.md
 ---
-
-## s3-bucket.tf
-
-```hcl
-resource "aws_s3_bucket" "default" {
-    bucket = "my-s3-bucket"
-
-    tags = {
-        Name        = "ExampleBucket"
-        # Environment = "Dev"
-    }
-}
-
-resource "aws_s3_bucket_versioning" "default" {
-    bucket = aws_s3_bucket.default.id
-
-    versioning_configuration {
-        status = "Disabled"
-    }
-}
-
-```
 
 ---
 zoom: 1.1
+src: ./pages/s3-bucket-unit.tftest.hcl.md
 ---
-
-# s3-bucket-unit.tftest.hcl
-
-```hcl
-run "check-required-tags" {
-
-  command = plan
-
-  assert {
-      condition     = contains(keys(aws_s3_bucket.default.tags), "Name") && contains(keys(aws_s3_bucket.default.tags), "Environment")
-      error_message = "Check required tags are present"
-  }
-}
-
-run "check-s3-versioning" {
-
-  command = plan
-
-  assert {
-      condition     = aws_s3_bucket_versioning.default.versioning_configuration[0].status == "Enabled"
-      error_message = "Check s3 versioning is enabled"
-  }
-}
-
-```
 
 ---
 zoom: 0.8
@@ -165,10 +122,10 @@ s3-bucket-unit.tftest.hcl... fail
 
 
 ---
-zoom: 0.8
+zoom: 1
 ---
 
-main.tf
+### main.tf
 
 ```hcl
 
@@ -201,7 +158,9 @@ resource "aws_security_group" "wide_open" {
 }
 ```
 
-----
+---
+zoom: 1.3
+---
 
 ```shell
 $ terraform validate
@@ -219,6 +178,8 @@ $ terraform validate
 ```
 
 
+---
+zoom: 1.1
 ---
 
 ```shell
@@ -251,7 +212,7 @@ Reference: https://github.com/terraform-linters/tflint-ruleset-terraform/blob/v0
 ```
 
 ---
-zoom: 0.8
+zoom: 0.9
 ---
 
 ```shell
@@ -287,3 +248,14 @@ Check: CKV_AWS_8: "Ensure all data stored in the Launch configuration or instanc
 Check: CKV_AWS_260: "Ensure no security groups allow ingress from 0.0.0.0:0 to port 80"
         FAILED for resource: aws_security_group.wide_open File: /main.tf:23-34
 ```
+
+---
+zoom: 1.3
+---
+
+# Conclusion
+
+- Testing tools are easy to use
+- Are easy to integrate on CI pipelines 
+- Enforce organizational rules and external standards (CIS, NIST, etc.).
+- No single silver bullet, many tools are complementary
