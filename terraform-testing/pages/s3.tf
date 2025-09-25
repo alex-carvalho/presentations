@@ -1,6 +1,4 @@
-## s3-bucket.tf
 
-```hcl
 resource "aws_s3_bucket" "default" {
     bucket = "my-s3-bucket"
 

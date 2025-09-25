@@ -1,6 +1,3 @@
-# s3-bucket-unit.tftest.hcl
-
-```hcl
 run "check-required-tags" {
 
   command = plan
@@ -20,5 +17,3 @@ run "check-s3-versioning" {
       error_message = "Check s3 versioning is enabled"
   }
 }
-
-```
